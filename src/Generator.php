@@ -28,15 +28,6 @@ class Generator
 
     /**
      *
-     * The route from which the path is being generated.
-     *
-     * @var Route
-     *
-     */
-    protected $route;
-
-    /**
-     *
      * The path being generated.
      *
      * @var string
@@ -73,12 +64,12 @@ class Generator
 
     /**
      *
-     * Constructor.
+     * Sets the Map object.
      *
      * @param Map $map A route collection object.
      *
      */
-    public function __construct(Map $map)
+    public function setMap(Map $map)
     {
         $this->map = $map;
     }
@@ -140,16 +131,17 @@ class Generator
      */
     protected function buildPath($name, $data, $raw)
     {
+        $route = $this->map->getRoute($name);
+
         $this->raw = $raw;
-        $this->route = $this->map->getRoute($name);
-        $this->path = $this->route->path;
+        $this->path = $route->path;
         $this->repl = [];
-        $this->data = array_merge($this->route->defaults, $data);
+        $this->data = array_merge($route->defaults, $data);
 
         $this->buildTokenReplacements();
         $this->buildOptionalReplacements();
         $this->path = strtr($this->path, $this->repl);
-        $this->buildWildcardReplacement();
+        $this->buildWildcardReplacement($route->wildcard);
 
         return $this->path;
     }
@@ -216,9 +208,8 @@ class Generator
      * @return string
      *
      */
-    protected function buildWildcardReplacement()
+    protected function buildWildcardReplacement($wildcard)
     {
-        $wildcard = $this->route->wildcard;
         if ($wildcard && isset($this->data[$wildcard])) {
             $this->path = rtrim($this->path, '/');
             foreach ($this->data[$wildcard] as $val) {

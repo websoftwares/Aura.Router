@@ -72,13 +72,16 @@ class Matcher
      *
      */
     public function __construct(
-        Map $map,
-        LoggerInterface $logger,
-        RuleIterator $ruleIterator)
+        RuleIterator $ruleIterator,
+        LoggerInterface $logger
+    ) {
+        $this->ruleIterator = $ruleIterator;
+        $this->logger = $logger;
+    }
+
+    public function setMap(Map $map)
     {
         $this->map = $map;
-        $this->logger = $logger;
-        $this->ruleIterator = $ruleIterator;
     }
 
     /**

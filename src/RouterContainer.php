@@ -91,10 +91,10 @@ class RouterContainer
     {
         if (! $this->matcher) {
             $this->matcher = new Matcher(
-                $this->getMap(),
-                $this->getLogger(),
-                $this->getRuleIterator()
+                $this->getRuleIterator(),
+                $this->getLogger()
             );
+            $this->matcher->setMap($this->getMap());
         }
         return $this->matcher;
     }
@@ -102,7 +102,8 @@ class RouterContainer
     public function getGenerator()
     {
         if (! $this->generator) {
-            $this->generator = new Generator($this->getMap());
+            $this->generator = new Generator();
+            $this->generator->setMap($this->getMap());
         }
         return $this->generator;
     }
